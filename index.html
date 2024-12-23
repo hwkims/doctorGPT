@@ -132,25 +132,35 @@ function askAI() {
     const prompt = `우린 역할극을 할거야. 이 질문에 니가 마치 의사인 것 처럼 가정해서 병명을 진단하고 답변해줘 역할극 티는 내지 말고: ${question}`;
     
     // OpenAI API 호출
-    fetch("https://api.openai.com/v1/completions", {
+    fetch("https://api.openai.com/v1/chat/completions", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-            model: "text-davinci-003",
-            prompt: prompt,
+            model: "gpt-3.5-turbo",  // 또는 gpt-4-turbo 등 사용 가능
+            messages: [
+                { role: "user", content: prompt }
+            ],
             max_tokens: 100,
         })
     })
     .then(response => response.json())
     .then(data => {
-        const result = data.choices[0].text;
-        document.getElementById('ai-result').innerText = result;
+        // 응답 처리: 오류가 있는지 확인
+        if (data && data.choices && data.choices.length > 0) {
+            const result = data.choices[0].message.content;
+            document.getElementById('ai-result').innerText = result;
+        } else {
+            document.getElementById('ai-result').innerText = "AI 응답 오류가 발생했습니다. 다시 시도해주세요.";
+        }
         displayMap();
     })
-    .catch(error => console.error("Error:", error));
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById('ai-result').innerText = "오류가 발생했습니다. API 호출을 확인해 주세요.";
+    });
 }
 
 // 지도 생성 함수
