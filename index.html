@@ -80,7 +80,7 @@
 
         // CSV 파일 읽기
         function loadCSV() {
-            Papa.parse('medical_institutions.csv', {  // 한글 대신 영어 파일명 사용
+            Papa.parse('medical_institutions.csv', {  // CSV 파일 경로를 정확히 설정하세요
                 download: true,
                 header: true,
                 skipEmptyLines: true,
@@ -122,23 +122,36 @@
             });
         }
 
-        // OpenAI API 호출
-        async function askGPT(question, apiKey) {
-            const response = await fetch('https://api.openai.com/v1/completions', {
+        // OpenAI API 호출 (GPT-4 사용)
+        async function askGPT(symptom, gender, age, apiKey) {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${apiKey}`
                 },
                 body: JSON.stringify({
-                    model: 'text-davinci-003',
-                    prompt: `우린 역할극을 할거야. 이 질문에 니가 마치 의사인 것 처럼 가정해서 병명을 진단하고 답변해줘 역할극 티는 내지 말고: ${question}`,
-                    max_tokens: 150
+                    model: 'gpt-4',  // 최신 GPT-4 모델 사용
+                    messages: [
+                        {
+                            role: 'system', content: 'You are a helpful assistant.'
+                        },
+                        {
+                            role: 'user', content: `성별: ${gender}, 나이: ${age}, 증상: ${symptom}`
+                        }
+                    ]
                 })
             });
 
             const data = await response.json();
-            return data.choices[0].text.trim();
+
+            // 응답 데이터 구조 확인 후 처리
+            if (data.choices && data.choices[0] && data.choices[0].message) {
+                return data.choices[0].message.content.trim();
+            } else {
+                console.error('API 응답 오류:', data);
+                return '문제를 처리할 수 없습니다.';
+            }
         }
 
         // 버튼 클릭시 동작
@@ -154,13 +167,12 @@
             }
 
             // OpenAI API 요청
-            const question = `성별: ${gender}, 나이: ${age}, 증상: ${symptom}`;
-            const answer = await askGPT(question, apiKey);
+            const answer = await askGPT(symptom, gender, age, apiKey);
 
             // 결과 출력
             document.getElementById('result').innerHTML = `
                 <h3>AI 진단 결과</h3>
-                <p><strong>질문:</strong> ${question}</p>
+                <p><strong>질문:</strong> 성별: ${gender}, 나이: ${age}, 증상: ${symptom}</p>
                 <p><strong>답변:</strong> ${answer}</p>
             `;
         });
