@@ -10,14 +10,255 @@
     <!-- PapaParse.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-        /* (생략: 스타일은 그대로 유지) */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9fb;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .form-container {
+            margin-bottom: 15px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        label {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        input, select, button {
+            margin: 8px 0;
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, button:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+
+        .gender-selection {
+            display: flex;
+            justify-content: space-between;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .gender-selection label {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .gender-selection input[type="radio"] {
+            margin: 0 5px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .loader {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 10px 0;
+            color: #007bff;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .prescription {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .prescription h3 {
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .prescription p {
+            margin: 10px 0;
+        }
+
+        #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .input-group input[type="range"] {
+            width: 80%;
+        }
+
+        .input-group input[type="number"] {
+            width: 18%;
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .container {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            .form-container {
+                width: 100%;
+            }
+
+            .gender-selection {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            #result {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            #map {
+                height: 350px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>AI 의료 진단 서비스</h1>
 
-        <!-- (생략: API Key 입력, 모델 선택, 증상 입력, 성별 라디오 버튼 등) -->
+        <!-- API Key 입력 받기 -->
+        <div class="form-container">
+            <label for="api-key">OpenAI API Key</label>
+            <input type="text" id="api-key" placeholder="API Key를 입력하세요" />
+        </div>
+
+        <!-- 모델 선택 받기 -->
+        <div class="form-container">
+            <label for="model">모델 선택</label>
+            <select id="model">
+                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                <option value="gpt-4-turbo">GPT-4 Turbo</option>
+            </select>
+        </div>
+
+        <!-- 증상 입력 받기 -->
+        <div class="form-container">
+            <label for="symptom">증상 입력</label>
+            <textarea id="symptom" placeholder="증상을 입력하세요"></textarea>
+        </div>
+
+        <!-- 성별 라디오 버튼 -->
+        <div class="form-container gender-selection">
+            <label>
+                <input type="radio" name="gender" value="남" checked> 남
+            </label>
+            <label>
+                <input type="radio" name="gender" value="여"> 여
+            </label>
+        </div>
+
+        <!-- 나이 입력 받기 (슬라이드바와 숫자 입력) -->
+        <div class="form-container input-group">
+            <label for="age">나이</label>
+            <input type="range" id="age-range" min="1" max="120" value="30">
+            <input type="number" id="age" min="1" max="120" value="30" />
+        </div>
+
+        <!-- 질문 제출 버튼 -->
+        <div class="form-container">
+            <button id="submit-btn">AI 분석 시작</button>
+        </div>
+
+        <!-- AI 분석 중 표시 -->
+        <div id="loader" class="loader" style="display: none;">AI 분석 중...</div>
 
         <div id="result"></div>
 
@@ -28,6 +269,15 @@
     <script>
         let hospitals = [];
         let userLocation = null;
+
+        // 나이 슬라이드바 동기화
+        document.getElementById('age-range').addEventListener('input', function() {
+            document.getElementById('age').value = this.value;
+        });
+
+        document.getElementById('age').addEventListener('input', function() {
+            document.getElementById('age-range').value = this.value;
+        });
 
         // CSV 파일 읽기
         function loadCSV() {
@@ -53,7 +303,6 @@
                         }
                     });
 
-                    // 위치 권한을 받기 전에 지도 표시 시도
                     if (userLocation) {
                         displayMap(userLocation);
                     }
@@ -69,7 +318,7 @@
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // 사용자 주변의 병원만 표시
+            // 사용자 주변 병원 표시
             hospitals.forEach(hospital => {
                 const distance = getDistance(userLocation.lat, userLocation.lon, hospital.lat, hospital.lon);
                 if (distance <= 10) { // 10km 이내 병원만 표시
@@ -80,7 +329,7 @@
             });
         }
 
-        // 두 지점 사이의 거리 계산 (단위: km)
+        // 거리 계산 함수 (단위: km)
         function getDistance(lat1, lon1, lat2, lon2) {
             const R = 6371; // Earth radius in km
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -132,8 +381,8 @@
                         lon: position.coords.longitude
                     };
 
-                    loadCSV(); // 병원 목록 로드
-                    displayMap(userLocation); // 지도 표시
+                    loadCSV();
+                    displayMap(userLocation); 
                 }, (error) => {
                     alert("위치 정보를 가져올 수 없습니다. 위치 권한을 허용해주세요.");
                 });
@@ -142,7 +391,7 @@
             }
         }
 
-        // 버튼 클릭시 동작
+        // 버튼 클릭 시 동작
         document.getElementById('submit-btn').addEventListener('click', async () => {
             const apiKey = document.getElementById('api-key').value;
             const symptom = document.getElementById('symptom').value;
@@ -155,13 +404,11 @@
                 return;
             }
 
-            // AI 분석 중 표시
             document.getElementById('loader').style.display = 'block';
 
             // OpenAI API 요청
             const answer = await askGPT(symptom, gender, age, apiKey, model);
 
-            // AI 분석 결과
             document.getElementById('loader').style.display = 'none';
 
             document.getElementById('result').innerHTML = `
