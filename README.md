@@ -1,4 +1,4 @@
-알겠습니다! 주어진 내용을 반영하여 GitHub README 파일을 다시 작성했습니다. HTML 코드 내에 실제로 포함된 CSS 스타일과 관리자 정보를 반영하여, 보다 정확하게 작성하였습니다.
+![image](https://github.com/user-attachments/assets/b7d17e4b-74c1-4353-9507-0d1dbc0c3999)
 
 ---
 
