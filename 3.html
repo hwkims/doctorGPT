@@ -18,7 +18,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f5;
+            background-color: #f9f9fb;
             color: #333;
             line-height: 1.5;
         }
@@ -29,13 +29,15 @@
             align-items: center;
             margin: 20px;
             max-width: 900px;
+            width: 100%;
             margin: 0 auto;
         }
 
         h1 {
             color: #333;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 20px;
+            font-weight: 600;
             text-align: center;
         }
 
@@ -47,31 +49,43 @@
             align-items: flex-start;
         }
 
+        label {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
         input, select, button {
             margin: 8px 0;
             padding: 12px;
             font-size: 16px;
             width: 100%;
             max-width: 350px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
             outline: none;
+            transition: all 0.3s ease;
         }
 
         input:focus, select:focus, button:focus {
-            border-color: #4CAF50;
+            border-color: #007bff;
         }
 
         button {
-            background-color: #4CAF50;
+            background-color: #007bff;
             color: white;
             cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(2px);
         }
 
         .gender-selection {
@@ -82,8 +96,8 @@
         }
 
         .gender-selection label {
-            font-size: 16px;
-            margin-right: 15px;
+            font-size: 1.1rem;
+            color: #666;
         }
 
         .gender-selection input[type="radio"] {
@@ -93,31 +107,34 @@
         }
 
         .loader {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 1.2rem;
+            font-weight: 600;
             margin: 10px 0;
-            color: #4CAF50;
+            color: #007bff;
         }
 
         #result {
-            margin-top: 20px;
-            font-size: 18px;
+            margin-top: 30px;
+            font-size: 1.2rem;
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 25px;
+            border-radius: 12px;
             border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 600px;
+            text-align: left;
         }
 
         .prescription {
-            font-size: 16px;
+            font-size: 1rem;
             line-height: 1.6;
         }
 
         .prescription h3 {
-            color: #2d3e50;
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-bottom: 10px;
         }
 
         .prescription p {
@@ -128,8 +145,42 @@
             height: 500px;
             width: 100%;
             margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .container {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            .form-container {
+                width: 100%;
+            }
+
+            .gender-selection {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            #result {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            #map {
+                height: 350px;
+            }
+        }
     </style>
 </head>
 <body>
